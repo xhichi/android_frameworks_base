@@ -291,15 +291,17 @@ public class Camera {
      *   cameras or an error was encountered enumerating them.
      */
     public static int getNumberOfCameras() {
-        boolean exposeAuxCamera = true;
+        boolean exposeAuxCamera = false;
         String packageName = ActivityThread.currentOpPackageName();
         /* Force to expose only two cameras
          * if the package name does not falls in this bucket
          */
         String packageList = SystemProperties.get("vendor.camera.aux.packagelist", "");
         String packageBlacklist = SystemProperties.get("vendor.camera.aux.packageblacklist", "");
-        if (!packageList.isEmpty()) {
-            exposeAuxCamera = false;
+
+        if (packageName.startsWith("com.asus")) {
+            exposeAuxCamera = true;
+        } else if (!packageList.isEmpty()) {
             if (Arrays.asList(packageList.split(",")).contains(packageName)) {
                 exposeAuxCamera = true;
             }
